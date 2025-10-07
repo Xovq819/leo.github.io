@@ -1,0 +1,648 @@
+
+<!DOCTYPE html>
+<html lang="zh-CN">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>健康管理系统 - 登录/注册</title>
+    <link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+    <script type="text/javascript" src="/layui/layui.js"></script>
+    <script type="text/javascript" src="/js/funs.js"></script>
+    <style>
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+            font-family: 'Helvetica Neue', Arial, sans-serif;
+        }
+
+        body {
+            background: linear-gradient(135deg, #4caf50 0%, #2196f3 100%);
+            min-height: 100vh;
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            padding: 20px;
+            color: #333;
+        }
+
+        .container {
+            width: 100%;
+            max-width: 900px;
+            background: white;
+            border-radius: 16px;
+            overflow: hidden;
+            box-shadow: 0 15px 30px rgba(0, 0, 0, 0.2);
+            display: flex;
+            flex-direction: column;
+        }
+
+        .header {
+            background: linear-gradient(135deg, #4caf50 0%, #2196f3 100%);
+            color: white;
+            padding: 25px;
+            text-align: center;
+            display: flex;
+            flex-direction: column;
+            justify-content: center;
+        }
+
+        .logo {
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            gap: 15px;
+            margin-bottom: 10px;
+        }
+
+        .logo i {
+            font-size: 42px;
+        }
+
+        .logo h1 {
+            font-size: 28px;
+            font-weight: 700;
+        }
+
+        .header p {
+            font-size: 16px;
+            opacity: 0.9;
+        }
+
+        .content {
+            display: flex;
+            flex-direction: column;
+            padding: 30px;
+        }
+
+        .form-tabs {
+            display: flex;
+            margin-bottom: 30px;
+            border-bottom: 1px solid #e0e0e0;
+        }
+
+        .form-tab {
+            padding: 10px 20px;
+            font-size: 18px;
+            font-weight: 500;
+            cursor: pointer;
+            border-bottom: 3px solid transparent;
+            transition: all 0.3s ease;
+            color: #7f8c8d;
+        }
+
+        .form-tab.active {
+            color: #3498db;
+            border-bottom-color: #3498db;
+        }
+
+        .form-container {
+            position: relative;
+            min-height: 400px;
+        }
+
+        .form {
+            position: absolute;
+            width: 100%;
+            transition: all 0.3s ease;
+        }
+
+        .login-form {
+            opacity: 1;
+            transform: translateX(0);
+            pointer-events: all;
+        }
+
+        .register-form {
+            opacity: 0;
+            transform: translateX(20px);
+            pointer-events: none;
+        }
+
+        .form-group {
+            margin-bottom: 20px;
+        }
+
+        .form-label {
+            display: block;
+            margin-bottom: 8px;
+            font-weight: 500;
+            color: #2c3e50;
+            font-size: 15px;
+        }
+
+        .input-with-icon {
+            position: relative;
+        }
+
+        .input-icon {
+            position: absolute;
+            left: 15px;
+            top: 50%;
+            transform: translateY(-50%);
+            color: #7f8c8d;
+            font-size: 18px;
+        }
+
+        .form-input {
+            width: 100%;
+            padding: 14px 15px 14px 45px;
+            border: 1px solid #ddd;
+            border-radius: 8px;
+            font-size: 16px;
+            transition: all 0.3s ease;
+        }
+
+        .form-input:focus {
+            outline: none;
+            border-color: #3498db;
+            box-shadow: 0 0 0 3px rgba(52, 152, 219, 0.1);
+        }
+
+        .form-footer {
+            display: flex;
+            justify-content: space-between;
+            align-items: center;
+            margin-bottom: 20px;
+        }
+
+        .remember-me {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            color: #7f8c8d;
+        }
+
+        .forgot-password {
+            color: #3498db;
+            text-decoration: none;
+            font-size: 14px;
+            transition: all 0.3s ease;
+        }
+
+        .forgot-password:hover {
+            text-decoration: underline;
+        }
+
+        .btn {
+            width: 100%;
+            padding: 15px;
+            border: none;
+            border-radius: 8px;
+            font-size: 16px;
+            font-weight: 600;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .btn-primary {
+            background: #3498db;
+            color: white;
+        }
+
+        .btn-primary:hover {
+            background: #2980b9;
+            transform: translateY(-2px);
+            box-shadow: 0 5px 15px rgba(0, 0, 0, 0.1);
+        }
+
+        .divider {
+            display: flex;
+            align-items: center;
+            margin: 25px 0;
+            color: #7f8c8d;
+        }
+
+        .divider:before, .divider:after {
+            content: "";
+            flex: 1;
+            height: 1px;
+            background: #e0e0e0;
+        }
+
+        .divider span {
+            padding: 0 15px;
+            font-size: 14px;
+        }
+
+        .social-login {
+            display: grid;
+            grid-template-columns: repeat(3, 1fr);
+            gap: 12px;
+            margin-bottom: 25px;
+        }
+
+        .social-btn {
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            gap: 8px;
+            padding: 12px;
+            border: 1px solid #e0e0e0;
+            border-radius: 8px;
+            background: white;
+            font-size: 14px;
+            cursor: pointer;
+            transition: all 0.3s ease;
+        }
+
+        .social-btn:hover {
+            background: #f5f5f5;
+        }
+
+        .social-btn i {
+            font-size: 16px;
+        }
+
+        .btn-wechat {
+            color: #2aae67;
+            background-color: #f7fbf9;
+        }
+
+        .btn-qq {
+            color: #12b7f5;
+            background-color: #f0faff;
+        }
+
+        .btn-weibo {
+            color: #e71f19;
+            background-color: #fef4f4;
+        }
+
+        .error-message {
+            color: #e74c3c;
+            font-size: 14px;
+            margin-top: 5px;
+            display: none;
+        }
+
+        .success-message {
+            color: #2ecc71;
+            font-size: 14px;
+            margin-top: 5px;
+            display: none;
+        }
+
+        .agreement {
+            display: flex;
+            align-items: center;
+            gap: 8px;
+            font-size: 14px;
+            color: #7f8c8d;
+            margin-bottom: 20px;
+        }
+
+        .agreement a {
+            color: #3498db;
+            text-decoration: none;
+        }
+
+        .agreement a:hover {
+            text-decoration: underline;
+        }
+
+        /* 响应式设计 */
+        @media (min-width: 768px) {
+            .container {
+                flex-direction: row;
+                min-height: 550px;
+            }
+
+            .header {
+                width: 40%;
+            }
+
+            .content {
+                width: 60%;
+                padding: 40px;
+            }
+        }
+
+        @media (max-width: 767px) {
+            .header {
+                padding: 20px;
+            }
+
+            .logo {
+                flex-direction: column;
+                gap: 10px;
+            }
+
+            .logo i {
+                font-size: 36px;
+            }
+
+            .logo h1 {
+                font-size: 24px;
+            }
+
+            .content {
+                padding: 25px;
+            }
+
+            .form-tabs {
+                margin-bottom: 20px;
+            }
+
+            .form-tab {
+                padding: 8px 12px;
+                font-size: 16px;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="container">
+    <div class="header">
+        <div class="logo">
+            <i class="fas fa-heartbeat"></i>
+            <h1>健康管理系统</h1>
+        </div>
+        <p>关爱老年人健康，提供全方位的医疗健康服务</p>
+    </div>
+
+    <div class="content">
+        <!-- 表单切换标签 -->
+        <div class="form-tabs">
+            <div class="form-tab active" data-form="login">登录</div>
+            <div class="form-tab" data-form="register">注册</div>
+        </div>
+
+        <div class="form-container">
+            <!-- 登录表单 -->
+            <form class="form login-form" id="login-form">
+                <div class="form-group">
+                    <label class="form-label">用户名或手机号</label>
+                    <div class="input-with-icon">
+                        <i class="fas fa-user input-icon"></i>
+                        <input type="text" name="name" class="form-input" id="login-username" placeholder="请输入用户名或手机号" required>
+                    </div>
+                    <div class="error-message" id="login-username-error"></div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">密码</label>
+                    <div class="input-with-icon">
+                        <i class="fas fa-lock input-icon"></i>
+                        <input type="password" name="pass" class="form-input" id="login-password" placeholder="请输入密码" required>
+                    </div>
+                    <div class="error-message" id="login-password-error"></div>
+                </div>
+
+                <div class="form-footer">
+                    <label class="remember-me">
+                        <input type="checkbox" id="remember-me">
+                        <span>记住我</span>
+                    </label>
+                    <a href="#" class="forgot-password">忘记密码？</a>
+                </div>
+
+                <button type="submit" class="btn btn-primary">登录</button>
+
+                <div class="error-message" id="login-error"></div>
+                <div class="success-message" id="login-success"></div>
+
+                <div class="divider">
+                    <span>或使用以下方式登录</span>
+                </div>
+
+                <div class="social-login">
+                    <button type="button" class="social-btn btn-wechat">
+                        <i class="fab fa-weixin"></i>
+                        <span>微信</span>
+                    </button>
+                    <button type="button" class="social-btn btn-qq">
+                        <i class="fab fa-qq"></i>
+                        <span>QQ</span>
+                    </button>
+                    <button type="button" class="social-btn btn-weibo">
+                        <i class="fab fa-weibo"></i>
+                        <span>微博</span>
+                    </button>
+                </div>
+            </form>
+
+            <!-- 注册表单 -->
+            <form class="form register-form" id="register-form">
+                <div class="form-group">
+                    <label class="form-label">用户名</label>
+                    <div class="input-with-icon">
+                        <i class="fas fa-user input-icon"></i>
+                        <input type="text" name="username" class="form-input" id="register-username" placeholder="请设置用户名" required>
+                    </div>
+                    <div class="error-message" id="register-username-error"></div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">手机号</label>
+                    <div class="input-with-icon">
+                        <i class="fas fa-phone input-icon"></i>
+                        <input type="tel" name="phone" class="form-input" id="register-phone" placeholder="请输入手机号" required>
+                    </div>
+                    <div class="error-message" id="register-phone-error"></div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">密码</label>
+                    <div class="input-with-icon">
+                        <i class="fas fa-lock input-icon"></i>
+                        <input type="password" name="password" class="form-input" id="register-password" placeholder="请设置密码" required>
+                    </div>
+                    <div class="error-message" id="register-password-error"></div>
+                </div>
+
+                <div class="form-group">
+                    <label class="form-label">确认密码</label>
+                    <div class="input-with-icon">
+                        <i class="fas fa-lock input-icon"></i>
+                        <input type="password" name="confirm_password" class="form-input" id="register-confirm-password" placeholder="请再次输入密码" required>
+                    </div>
+                    <div class="error-message" id="register-confirm-error"></div>
+                </div>
+
+                <label class="agreement">
+                    <input type="checkbox" id="agreement" required>
+                    <span>我已阅读并同意<a href="#">《用户服务协议》</a>和<a href="#">《隐私政策》</a></span>
+                </label>
+
+                <button type="submit" class="btn btn-primary">注册</button>
+
+                <div class="error-message" id="register-error"></div>
+                <div class="success-message" id="register-success"></div>
+            </form>
+        </div>
+    </div>
+</div>
+<script type="text/javascript">
+    var $;
+    var layer;
+    layui.use(["jquery","layer"],function(){
+        $=layui.jquery;
+        layer=layui.layer;
+
+        // 切换登录/注册表单
+        $('.form-tab').click(function() {
+            var formType = $(this).data('form');
+
+            // 更新标签状态
+            $('.form-tab').removeClass('active');
+            $(this).addClass('active');
+
+            // 切换表单显示
+            if (formType === 'login') {
+                $('.login-form').css({
+                    'opacity': '1',
+                    'transform': 'translateX(0)',
+                    'pointer-events': 'all'
+                });
+                $('.register-form').css({
+                    'opacity': '0',
+                    'transform': 'translateX(20px)',
+                    'pointer-events': 'none'
+                });
+            } else {
+                $('.login-form').css({
+                    'opacity': '0',
+                    'transform': 'translateX(-20px)',
+                    'pointer-events': 'none'
+                });
+                $('.register-form').css({
+                    'opacity': '1',
+                    'transform': 'translateX(0)',
+                    'pointer-events': 'all'
+                });
+            }
+
+            // 清除所有错误消息
+            $('.error-message').hide();
+            $('.success-message').hide();
+        });
+
+        // 登录表单提交处理
+        $("#login-form").submit(function(e){
+            e.preventDefault(); // 阻止表单默认提交
+
+            var name=$("[name=name]").val();
+            var pass=$("[name=pass]").val();
+
+            // 简单验证
+            if(!name){
+                $("#login-username-error").text("请输入用户名或手机号").show();
+                return;
+            } else {
+                $("#login-username-error").hide();
+            }
+
+            if(!pass){
+                $("#login-password-error").text("请输入密码").show();
+                return;
+            } else {
+                $("#login-password-error").hide();
+            }
+
+            // 发送登录请求
+            ajax_post("/User/login",{"name":name,"pass":pass},function(json){
+                if(json.status>0){
+                    location.href="/index.html";
+                }else{
+                    $("#login-error").text(json.msg).show();
+                    setTimeout(function(){
+                        $("#login-error").hide();
+                    }, 3000);
+                }
+            })
+        });
+
+        // 注册表单提交处理
+        $("#register-form").submit(function(e){
+            e.preventDefault(); // 阻止表单默认提交
+
+            var username = $("#register-username").val();
+            var phone = $("#register-phone").val();
+            var password = $("#register-password").val();
+            var confirmPassword = $("#register-confirm-password").val();
+            var isValid = true;
+
+            // 验证用户名
+            if(!username){
+                $("#register-username-error").text("请输入用户名").show();
+                isValid = false;
+            } else if(username.length < 3 || username.length > 20){
+                $("#register-username-error").text("用户名长度应在3-20个字符之间").show();
+                isValid = false;
+            } else {
+                $("#register-username-error").hide();
+            }
+
+            // 验证手机号
+            var phoneReg = /^1[3-9]\d{9}$/;
+            if(!phone){
+                $("#register-phone-error").text("请输入手机号").show();
+                isValid = false;
+            } else if(!phoneReg.test(phone)){
+                $("#register-phone-error").text("请输入有效的手机号").show();
+                isValid = false;
+            } else {
+                $("#register-phone-error").hide();
+            }
+
+            // 验证密码
+            if(!password){
+                $("#register-password-error").text("请设置密码").show();
+                isValid = false;
+            } else if(password.length < 6){
+                $("#register-password-error").text("密码长度不能少于6个字符").show();
+                isValid = false;
+            } else {
+                $("#register-password-error").hide();
+            }
+
+            // 验证确认密码
+            if(!confirmPassword){
+                $("#register-confirm-error").text("请再次输入密码").show();
+                isValid = false;
+            } else if(confirmPassword !== password){
+                $("#register-confirm-error").text("两次输入的密码不一致").show();
+                isValid = false;
+            } else {
+                $("#register-confirm-error").hide();
+            }
+
+            // 验证是否同意协议
+            if(!$("#agreement").is(":checked")){
+                layer.msg("请阅读并同意用户协议和隐私政策");
+                isValid = false;
+            }
+
+            if(!isValid) return;
+
+            // 发送注册请求
+            ajax_post("/User/register",{
+                "username": username,
+                "phone": phone,
+                "password": password
+            },function(json){
+                if(json.status>0){
+                    $("#register-success").text("注册成功，即将跳转到登录页面...").show();
+                    setTimeout(function(){
+                        // 切换到登录表单
+                        $('.form-tab[data-form="login"]').click();
+                        // 自动填充用户名
+                        $("#login-username").val(phone);
+                        $("#register-success").hide();
+                    }, 2000);
+                }else{
+                    $("#register-error").text(json.msg).show();
+                    setTimeout(function(){
+                        $("#register-error").hide();
+                    }, 3000);
+                }
+            });
+        });
+
+    });
+</script>
+</body>
+</html>
+

@@ -1,0 +1,822 @@
+<!DOCTYPE html>
+<html>
+<head>
+	<meta charset="utf-8">
+	<title>健康管理系统 - 首页</title>
+	<meta name="renderer" content="webkit">
+	<meta http-equiv="X-UA-Compatible" content="IE=edge,chrome=1">
+
+	<meta name="viewport" content="width=device-width, initial-scale=1.0, minimum-scale=1.0, maximum-scale=1.0, user-scalable=0">
+	<link rel="stylesheet" href="layui/css/layui.css" media="all">
+	<link rel="stylesheet" href="layui/css/admin.css" media="all">
+	<link rel="stylesheet" href="https://cdnjs.cloudflare.com/ajax/libs/font-awesome/6.0.0/css/all.min.css">
+	<style>
+		/* 全局样式调整 - 采用健康管理系统的现代风格 */
+		/* 在index.html的style区域添加以下样式 */
+		.dashboard-modules {
+			padding: 20px;
+		}
+
+		.module-grid {
+			display: grid;
+			grid-template-columns: repeat(auto-fill, minmax(240px, 1fr));
+			gap: 20px;
+			margin-top: 20px;
+		}
+
+		.module-card {
+			background-color: white;
+			border-radius: 8px;
+			padding: 25px 15px;
+			text-align: center;
+			box-shadow: 0 2px 12px rgba(0, 0, 0, 0.05);
+			transition: all 0.3s ease;
+			cursor: pointer;
+			border: 1px solid #f2f2f2;
+		}
+
+		.module-card:hover {
+			transform: translateY(-5px);
+			box-shadow: 0 10px 20px rgba(0, 0, 0, 0.1);
+			border-color: #e0e0e0;
+		}
+
+		.module-icon {
+			font-size: 36px;
+			color: #4caf50;
+			margin-bottom: 15px;
+			height: 40px;
+			line-height: 40px;
+		}
+
+		.module-name {
+			font-size: 18px;
+			font-weight: 600;
+			color: #2c3e50;
+			margin-bottom: 8px;
+		}
+
+		.module-desc {
+			font-size: 14px;
+			color: #7f8c8d;
+			line-height: 1.5;
+		}
+		* {
+			margin: 0;
+			padding: 0;
+			box-sizing: border-box;
+			font-family: 'Helvetica Neue', Arial, sans-serif;
+		}
+
+		body {
+			background: linear-gradient(135deg, #f5f7fa 0%, #e4efe9 100%);
+			color: #333;
+			line-height: 1.6;
+			min-height: 100vh;
+		}
+
+		/* 顶部导航样式 - 采用渐变背景 */
+		.layui-layout-admin .layui-header {
+			background: linear-gradient(135deg, #4caf50 0%, #2196f3 100%);
+			box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+			border-bottom: none;
+		}
+
+		/* 导航菜单样式 */
+		.layui-nav.layui-layout-left .layui-nav-item a {
+			color: white;
+			transition: all 0.3s ease;
+		}
+
+		.layui-nav.layui-layout-left .layui-nav-item a:hover {
+			background-color: rgba(255, 255, 255, 0.2);
+			border-radius: 6px;
+		}
+
+		.layui-nav.layui-layout-right .layui-nav-item a {
+			color: white;
+		}
+
+		.layui-nav.layui-layout-right .layui-nav-item a:hover {
+			background-color: rgba(255, 255, 255, 0.2);
+			border-radius: 6px;
+		}
+
+		/* 侧边栏样式 */
+		.layui-side {
+			background-color: #263238;
+			box-shadow: 2px 0 8px rgba(0,0,0,0.1);
+		}
+
+		.layui-nav-tree .layui-nav-item a {
+			color: #CFD8DC;
+			transition: all 0.3s ease;
+			border-radius: 4px;
+			margin: 0 5px;
+		}
+
+		.layui-nav-tree .layui-nav-item a:hover {
+			background-color: #37474F;
+			color: #fff;
+		}
+
+		.layui-nav-tree .layui-nav-itemed a {
+			background-color: #1976D2;
+			color: #fff;
+		}
+
+		/* Logo样式 */
+		.layui-logo {
+			background: linear-gradient(135deg, #2196f3 0%, #4caf50 100%);
+			color: white;
+			font-weight: bold;
+			display: flex;
+			align-items: center;
+			gap: 10px;
+			padding: 0 20px;
+		}
+
+		.layui-logo i {
+			font-size: 24px;
+		}
+
+		/* 页面标签样式 */
+		.layadmin-pagetabs {
+			background-color: white;
+			border-bottom: 1px solid #e4e7ed;
+			box-shadow: 0 2px 4px rgba(0,0,0,0.05);
+		}
+
+		.layui-tab-title .layui-this {
+			background-color: white;
+			color: #2196f3;
+			border-bottom: 2px solid #2196f3;
+		}
+
+		/* 主体内容区域 */
+		.layui-body {
+			background: linear-gradient(135deg, #f5f7fa 0%, #e4efe9 100%);
+			padding: 20px;
+		}
+
+		/* 卡片式布局样式 - 采用健康管理系统的卡片设计 */
+		.dashboard-card {
+			background-color: white;
+			border-radius: 16px;
+			box-shadow: 0 8px 16px rgba(0,0,0,0.05);
+			padding: 20px;
+			margin-bottom: 20px;
+			transition: all 0.3s ease;
+		}
+
+		.dashboard-card:hover {
+			transform: translateY(-5px);
+			box-shadow: 0 12px 20px rgba(0,0,0,0.1);
+		}
+
+		/* 数据统计卡片 */
+		.stat-card {
+			text-align: center;
+			padding: 25px 15px;
+			position: relative;
+			overflow: hidden;
+		}
+
+		.stat-card:before {
+			content: "";
+			position: absolute;
+			top: 0;
+			left: 0;
+			width: 100%;
+			height: 5px;
+			background: linear-gradient(90deg, #4caf50, #2196f3);
+		}
+
+		.stat-card .stat-icon {
+			font-size: 36px;
+			margin-bottom: 15px;
+			color: #3498db;
+			background: rgba(52, 152, 219, 0.1);
+			width: 70px;
+			height: 70px;
+			line-height: 70px;
+			border-radius: 50%;
+			margin: 0 auto 15px;
+			transition: all 0.3s ease;
+		}
+
+		.stat-card:hover .stat-icon {
+			background: #3498db;
+			color: white;
+			transform: scale(1.1);
+		}
+
+		.stat-card .stat-value {
+			font-size: 28px;
+			font-weight: bold;
+			color: #2c3e50;
+			margin: 10px 0;
+		}
+
+		.stat-card .stat-desc {
+			color: #7f8c8d;
+			font-size: 16px;
+		}
+
+		/* 按钮样式 - 采用渐变和圆角设计 */
+		.layui-btn {
+			background: linear-gradient(135deg, #4caf50 0%, #2196f3 100%);
+			border: none;
+			border-radius: 8px;
+			padding: 8px 20px;
+			transition: all 0.3s ease;
+			font-weight: 500;
+		}
+
+		.layui-btn:hover {
+			transform: translateY(-2px);
+			box-shadow: 0 4px 8px rgba(0,0,0,0.15);
+			background: linear-gradient(135deg, #43a047 0%, #1976d2 100%);
+		}
+
+		.layui-btn-primary {
+			border-color: #2196f3;
+			color: #2196f3;
+			background-color: transparent;
+			border-radius: 8px;
+			transition: all 0.3s ease;
+		}
+
+		.layui-btn-primary:hover {
+			background-color: rgba(33, 150, 243, 0.1);
+			color: #1976d2;
+		}
+
+		/* 表格样式美化 */
+		.layui-table {
+			border-radius: 12px;
+			overflow: hidden;
+			box-shadow: 0 4px 12px rgba(0,0,0,0.05);
+		}
+
+		.layui-table th {
+			background-color: #f5f7fa;
+			color: #2c3e50;
+			font-weight: 600;
+		}
+
+		/* 表单元素样式 */
+		.layui-form-item .layui-input,
+		.layui-form-item .layui-select,
+		.layui-form-item .layui-textarea {
+			border-radius: 8px;
+			border-color: #ddd;
+			padding: 10px 15px;
+			transition: all 0.3s ease;
+		}
+
+		.layui-form-item .layui-input:focus,
+		.layui-form-item .layui-select:focus,
+		.layui-form-item .layui-textarea:focus {
+			border-color: #2196f3;
+			box-shadow: 0 0 0 3px rgba(33, 150, 243, 0.1);
+		}
+
+		/* 响应式布局调整 */
+		@media (max-width: 768px) {
+			.layui-body {
+				padding: 10px;
+			}
+
+			.dashboard-card {
+				padding: 15px;
+			}
+		}
+
+		/* 主标题区域样式 */
+		.hero {
+			text-align: center;
+			padding: 20px 0 15px;
+			margin-bottom: 20px;
+		}
+
+		.hero h2 {
+			font-size: 26px;
+			color: #2c3e50;
+			margin-bottom: 10px;
+			font-weight: 700;
+		}
+
+		.hero p {
+			color: #7f8c8d;
+			font-size: 16px;
+			position: relative;
+			display: inline-block;
+			padding: 0 20px;
+		}
+
+		.hero p:before, .hero p:after {
+			content: "";
+			position: absolute;
+			top: 50%;
+			width: 60px;
+			height: 2px;
+			background: linear-gradient(90deg, transparent, #3498db);
+		}
+
+		.hero p:before {
+			left: -70px;
+		}
+
+		.hero p:after {
+			right: -70px;
+			background: linear-gradient(90deg, #3498db, transparent);
+		}
+
+		/* 服务网格布局 */
+		.services {
+			display: grid;
+			grid-template-columns: repeat(auto-fit, minmax(280px, 1fr));
+			gap: 20px;
+			margin: 20px 0;
+		}
+
+		/* 特殊样式的卡片 */
+		.special-card {
+			background: linear-gradient(135deg, #ff7e5f 0%, #feb47b 100%);
+			color: white;
+		}
+
+		.special-card:before {
+			display: none;
+		}
+
+		.special-card .stat-icon,
+		.special-card .stat-value,
+		.special-card .stat-desc {
+			color: white;
+		}
+
+		.special-card .stat-icon {
+			background: rgba(255, 255, 255, 0.2);
+		}
+
+		.special-card:hover .stat-icon {
+			background: white;
+			color: #ff7e5f;
+		}
+
+		/* 用户信息样式 */
+		.user-profile {
+			display: flex;
+			flex-wrap: wrap;
+			gap: 30px;
+			margin-bottom: 30px;
+		}
+
+		.user-avatar {
+			flex: 0 0 180px;
+			text-align: center;
+		}
+
+		.avatar-img {
+			width: 150px;
+			height: 150px;
+			border-radius: 50%;
+			object-fit: cover;
+			border: 5px solid #f5f7fa;
+			box-shadow: 0 4px 12px rgba(0,0,0,0.1);
+			margin: 0 auto 15px;
+		}
+
+		.user-info {
+			flex: 1;
+			min-width: 300px;
+		}
+
+		.info-row {
+			display: flex;
+			flex-wrap: wrap;
+			margin-bottom: 15px;
+		}
+
+		.info-item {
+			flex: 0 0 50%;
+			min-width: 250px;
+			margin-bottom: 10px;
+		}
+
+		.info-label {
+			color: #7f8c8d;
+			display: inline-block;
+			width: 100px;
+		}
+
+		.info-value {
+			color: #2c3e50;
+			font-weight: 500;
+		}
+
+		/* 用户健康数据样式 */
+		.health-data {
+			display: grid;
+			grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+			gap: 15px;
+			margin-top: 20px;
+		}
+
+		.health-item {
+			background-color: #f9f9f9;
+			border-radius: 10px;
+			padding: 15px;
+			text-align: center;
+		}
+
+		.health-title {
+			color: #7f8c8d;
+			font-size: 14px;
+			margin-bottom: 5px;
+		}
+
+		.health-value {
+			color: #2196f3;
+			font-size: 22px;
+			font-weight: bold;
+		}
+
+		.health-unit {
+			color: #7f8c8d;
+			font-size: 12px;
+		}
+
+		/* 健康记录样式 */
+		.health-records {
+			margin-top: 30px;
+		}
+
+		.record-header {
+			display: flex;
+			justify-content: space-between;
+			align-items: center;
+			margin-bottom: 15px;
+		}
+
+		.record-title {
+			font-size: 18px;
+			color: #2c3e50;
+			font-weight: 600;
+		}
+	</style>
+</head>
+
+<body class="layui-layout-body" layadmin-themealias="ocean-header">
+
+<div id="LAY_app">
+	<div class="layui-layout layui-layout-admin">
+		<div class="layui-header">
+
+			<ul class="layui-nav layui-layout-left">
+				<li class="layui-nav-item layadmin-flexible" lay-unselect="">
+					<a href="javascript:;" layadmin-event="flexible" title="侧边伸缩">
+						<i class="layui-icon layui-icon-spread-left" id="LAY_app_flexible"></i>
+					</a>
+				</li>
+				<li class="layui-nav-item layui-hide-xs" lay-unselect="">
+					<a href="#" target="_blank" title="前台">
+						<i class="fas fa-heartbeat"></i>
+					</a>
+				</li>
+				<li class="layui-nav-item" lay-unselect="">
+					<a href="javascript:;" layadmin-event="refresh" title="刷新">
+						<i class="layui-icon layui-icon-refresh-3"></i>
+					</a>
+				</li>
+				<li class="layui-nav-item layui-hide-xs" lay-unselect="">
+					<input type="text" placeholder="搜索..." autocomplete="off" class="layui-input layui-input-search" layadmin-event="serach" lay-action="template/search.html?keywords=">
+				</li>
+				<span class="layui-nav-bar"></span></ul>
+			<ul class="layui-nav layui-layout-right" lay-filter="layadmin-layout-right">
+
+				<li class="layui-nav-item" lay-unselect="">
+					<a lay-href="app/message/index.html" layadmin-event="message" lay-text="消息中心">
+						<i class="layui-icon layui-icon-notice"></i>
+
+						<span class="layui-badge-dot"></span>
+					</a>
+				</li>
+				<li class="layui-nav-item layui-hide-xs" lay-unselect="">
+					<a href="javascript:;" layadmin-event="theme">
+						<i class="layui-icon layui-icon-theme"></i>
+					</a>
+				</li>
+				<li class="layui-nav-item layui-hide-xs" lay-unselect="">
+					<a href="javascript:;" layadmin-event="note">
+						<i class="layui-icon layui-icon-note"></i>
+					</a>
+				</li>
+				<li class="layui-nav-item layui-hide-xs" lay-unselect="">
+					<a href="javascript:;" layadmin-event="fullscreen">
+						<i class="layui-icon layui-icon-screen-full"></i>
+					</a>
+				</li>
+				<li class="layui-nav-item" lay-unselect="">
+					<a href="javascript:showmenu();">
+						<cite>健康管理员</cite>
+						<span class="layui-nav-more"></span></a>
+					<dl class="layui-nav-child" id="menu">
+						<dd>
+							<a lay-href="set/user/info.html">基本资料</a>
+						</dd>
+						<dd>
+							<a lay-href="/password.html">修改密码</a>
+						</dd>
+						<hr>
+						<dd lay-href="/User/outlogin" style="text-align: center;">
+							<a>退出</a>
+						</dd>
+					</dl>
+				</li>
+
+				<li class="layui-nav-item layui-hide-xs" lay-unselect="">
+					<a href="javascript:;" layadmin-event="about"><i class="layui-icon layui-icon-more-vertical"></i></a>
+				</li>
+				<li class="layui-nav-item layui-show-xs-inline-block layui-hide-sm" lay-unselect="">
+					<a href="javascript:;" layadmin-event="more"><i class="layui-icon layui-icon-more-vertical"></i></a>
+				</li>
+				<span class="layui-nav-bar"></span></ul>
+		</div>
+
+
+		<div class="layui-side layui-side-menu">
+			<div class="layui-side-scroll">
+				<div class="layui-logo" lay-href="home/console.html">
+					<i class="fas fa-heartbeat"></i>
+					<span>健康管理系统</span>
+				</div>
+
+				<ul class="layui-nav layui-nav-tree" lay-shrink="all" id="LAY-system-side-menu" lay-filter="layadmin-system-side-menu">
+					<li data-name="home" class="layui-nav-item layui-nav-itemed">
+						<a href="javascript:;" lay-tips="主页" lay-direction="2">
+							<i class="layui-icon layui-icon-home"></i>
+							<cite>主页</cite>
+							<span class="layui-nav-more"></span></a>
+						<dl class="layui-nav-child">
+							<dd data-name="console" class="layui-this">
+								<a lay-href="index.html">首页</a>
+							</dd>
+							<dd data-name="console" class="  p p0 ">
+								<a lay-href="User/index.html">用户管理</a>
+							</dd>
+							<dd data-name="console" class="  p p0 ">
+								<a lay-href="Department/index.html">科室管理</a>
+							</dd>
+							<dd data-name="console" class="  p p0 p1 p2">
+								<a lay-href="Client/index.html">客户管理</a>
+							</dd>
+							<dd data-name="console" class="  p p0 p1 p2">
+								<a lay-href="Project/index.html">体检项目</a>
+							</dd>
+							<dd data-name="console" class="  p p0 p1 p2">
+								<a lay-href="Order_details/index.html">体检明细表</a>
+
+							</dd>
+							<dd data-name="console" class="  p p0 p1">
+								<a lay-href="Reserver/index.html">预约管理</a>
+							</dd>
+							<dd data-name="console" class="  p p0 p1">
+								<a lay-href="Reserver_limit/index.html">预约限额表</a>
+							</dd>
+							<dd data-name="console" class="  p p0 p1">
+								<a lay-href="Client_level/index.html">会员等级</a>
+							</dd>
+							<dd data-name="console" class="  p p0 p1 p2">
+								<a lay-href="Order_main/index.html">体检主表</a>
+							</dd>
+
+							<dd data-name="console" class="  p p0 p1">
+								<a lay-href="Payinfo/index.html">支付记录</a>
+							</dd>
+							<dd data-name="console" class="  p p0 p1 p3">
+								<a lay-href="Communicate/index.html">回访记录</a>
+							</dd>
+
+
+						</dl>
+					</li>
+
+					<span class="layui-nav-bar"></span></ul>
+			</div>
+		</div>
+
+
+		<div class="layadmin-pagetabs" id="LAY_app_tabs">
+			<div class="layui-icon layadmin-tabs-control layui-icon-prev" layadmin-event="leftPage"></div>
+			<div class="layui-icon layadmin-tabs-control layui-icon-next" layadmin-event="rightPage"></div>
+			<div class="layui-icon layadmin-tabs-control layui-icon-down">
+				<ul class="layui-nav layadmin-tabs-select" lay-filter="layadmin-pagetabs-nav">
+					<li class="layui-nav-item" lay-unselect="">
+						<a href="javascript:;"><span class="layui-nav-more"></span></a>
+						<dl class="layui-nav-child layui-anim-fadein">
+							<dd layadmin-event="closeThisTabs">
+								<a href="javascript:;">关闭当前标签页</a>
+							</dd>
+							<dd layadmin-event="closeOtherTabs">
+								<a href="javascript:;">关闭其它标签页</a>
+							</dd>
+							<dd layadmin-event="closeAllTabs">
+								<a href="javascript:;">关闭全部标签页</a>
+							</dd>
+						</dl>
+					</li>
+					<span class="layui-nav-bar"></span></ul>
+			</div>
+			<div class="layui-tab" lay-unauto="" lay-allowclose="true" lay-filter="layadmin-layout-tabs">
+				<ul class="layui-tab-title" id="LAY_app_tabsheader">
+					<li lay-id="home.html" lay-attr="home.html" class="layui-this"><i class="layui-icon layui-icon-user"></i><span>首页</span><i class="layui-icon layui-unselect layui-tab-close">ဆ</i></li>
+				</ul>
+			</div>
+		</div>
+
+
+		<div class="layui-body" id="LAY_app_body">
+			<div class="layadmin-tabsbody-item layui-show">
+
+				<!-- 修改hospital/src/main/resources/static/index.html中对应区域 -->
+				<div class="layui-body" id="LAY_app_body">
+					<div class="layadmin-tabsbody-item layui-show">
+						<div class="hero">
+							<h2>健康管理系统首页</h2>
+							<p>—— 快速访问各功能模块 ——</p>
+						</div>
+
+						<!-- 功能模块卡片区域 -->
+						<div class="dashboard-modules">
+							<div class="module-grid">
+								<!-- 用户管理模块 -->
+								<div class="module-card" onclick="location.href='User/index.html'">
+									<div class="module-icon layui-icon layui-icon-user"></div>
+									<div class="module-name">用户管理</div>
+									<div class="module-desc">管理系统用户信息及权限</div>
+								</div>
+
+								<!-- 科室管理模块 -->
+								<div class="module-card" onclick="location.href='Department/index.html'">
+									<div class="module-icon layui-icon layui-icon-home"></div>
+									<div class="module-name">科室管理</div>
+									<div class="module-desc">管理医院科室信息及配置</div>
+								</div>
+
+								<!-- 客户管理模块 -->
+								<div class="module-card" onclick="location.href='Client/index.html'">
+									<div class="module-icon layui-icon layui-icon-group"></div>
+									<div class="module-name">客户管理</div>
+									<div class="module-desc">管理体检客户基本信息</div>
+								</div>
+
+								<!-- 体检项目模块 -->
+								<div class="module-card" onclick="location.href='Project/index.html'">
+									<div class="module-icon layui-icon layui-icon-list"></div>
+									<div class="module-name">体检项目</div>
+									<div class="module-desc">管理各类体检项目及套餐</div>
+								</div>
+
+								<!-- 体检主表模块 -->
+								<div class="module-card" onclick="location.href='Order_main/index.html'">
+									<div class="module-icon layui-icon layui-icon-file-text"></div>
+									<div class="module-name">体检主表</div>
+									<div class="module-desc">管理体检订单主信息</div>
+								</div>
+
+								<!-- 体检明细表模块 -->
+								<div class="module-card" onclick="location.href='Order_details/index.html'">
+									<div class="module-icon layui-icon layui-icon-file"></div>
+									<div class="module-name">体检明细表</div>
+									<div class="module-desc">管理体检项目明细数据</div>
+								</div>
+
+								<!-- 回访记录模块 -->
+								<div class="module-card" onclick="location.href='Communicate/index.html'">
+									<div class="module-icon layui-icon layui-icon-talk"></div>
+									<div class="module-name">回访记录</div>
+									<div class="module-desc">管理客户体检后回访信息</div>
+								</div>
+
+								<!-- 预约管理模块 -->
+								<div class="module-card" onclick="location.href='Reserver/index.html'">
+									<div class="module-icon layui-icon layui-icon-calendar"></div>
+									<div class="module-name">预约管理</div>
+									<div class="module-desc">管理客户体检预约信息</div>
+								</div>
+
+								<!-- 支付记录模块 -->
+								<div class="module-card" onclick="location.href='Pay_info/index.html'">
+									<div class="module-icon layui-icon layui-icon-rmb"></div>
+									<div class="module-name">支付记录</div>
+									<div class="module-desc">查看和管理支付记录信息</div>
+								</div>
+
+								<!-- 会员等级模块 -->
+								<div class="module-card" onclick="location.href='Client_level/index.html'">
+									<div class="module-icon layui-icon layui-icon-diamond"></div>
+									<div class="module-name">会员等级</div>
+									<div class="module-desc">管理客户会员等级及权益</div>
+								</div>
+							</div>
+						</div>
+					</div>
+				</div>
+			</div>
+		</div>
+
+
+		<div class="layadmin-body-shade" layadmin-event="shade"></div>
+	</div>
+</div>
+
+<script src="layui/layui.js"></script>
+<script>
+	layui.use(['index','jquery'],function(){
+		var $=layui.jquery;
+		$.get("/User/self",{},function(json){
+			$(".p"+json.power).css("display","block");
+			$("cite").text(json.name);
+
+			// 动态加载用户信息
+			if(json.userInfo) {
+				// 更新用户基本信息
+				$(".user-info h3").text(json.user.name || "");
+				//$(".info-value:eq(0)").text(json.user.memberId || "");
+				$(".info-value:eq(1)").text(json.userInfo.level || "");
+				$(".info-value:eq(2)").text(json.userInfo.gender || "");
+				$(".info-value:eq(3)").text(json.userInfo.age || "");
+				$(".info-value:eq(4)").text(json.userInfo.phone || "");
+				$(".info-value:eq(5)").text(json.userInfo.email || "");
+				$(".info-value:eq(6)").text(json.userInfo.regDate || "");
+				$(".info-value:eq(7)").text(json.userInfo.lastLogin || "");
+				$(".info-value:eq(8)").text(json.userInfo.address || "");
+
+				// 更新健康数据
+				if(json.healthData) {
+					$(".health-value:eq(0)").html(json.healthData.height + "<span class='health-unit'>cm</span>");
+					$(".health-value:eq(1)").html(json.healthData.weight + "<span class='health-unit'>kg</span>");
+					$(".health-value:eq(2)").text(json.healthData.bmi || "");
+					$(".health-value:eq(3)").text(json.healthData.bloodType || "");
+				}
+			}
+		},"json");
+
+		// 初始化菜单状态
+		$('#menu').hide();
+	});
+
+	function loginload(o){
+		if(o.contentWindow.location.href.indexOf("login")>=0){
+			location.href="/login.html";
+		}
+	}
+
+	var isshow=false;
+	function showmenu(){
+		var menu = document.getElementById('menu');
+		if(isshow===true){
+			menu.style.display="none";
+		}else{
+			menu.style.display="block";
+		}
+		isshow=!isshow;
+	}
+
+	// 点击其他区域关闭菜单
+	document.addEventListener('click', function(event) {
+		var menu = document.getElementById('menu');
+		var userMenu = document.querySelector('.layui-nav-item:last-child a');
+
+		if(isshow &&
+				!menu.contains(event.target) &&
+				!userMenu.contains(event.target)){
+			menu.style.display="none";
+			isshow=false;
+		}
+	});
+
+	// 更新当前时间
+	function updateTime() {
+		const now = new Date();
+		const hours = now.getHours().toString().padStart(2, '0');
+		const minutes = now.getMinutes().toString().padStart(2, '0');
+		const seconds = now.getSeconds().toString().padStart(2, '0');
+		const date = now.toLocaleDateString();
+
+		// 如果有显示时间的元素，可以在这里更新
+		// document.getElementById('current-time').textContent = `${date} ${hours}:${minutes}:${seconds}`;
+	}
+
+	// 初始化时间并定时更新
+	updateTime();
+	setInterval(updateTime, 1000);
+</script>
+
+
+</body>
+
+</html>

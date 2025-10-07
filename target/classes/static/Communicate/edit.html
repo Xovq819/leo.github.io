@@ -1,0 +1,90 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link href="/layui/css/layui.css" rel="stylesheet">
+    <script src="/layui/layui.js"></script>
+    <script src="/js/funs.js"></script>
+    <style>
+        .layui-form{
+        padding-right: 10px;
+        }
+    </style>
+</head>
+<body>
+<div class="layui-form" lay-filter="myform">
+<form >
+    <input type="hidden" name="id" value="0">
+    <div class="layui-form-item">
+        <label class="layui-form-label">回访时间</label>
+        <div class="layui-input-block">
+            <input type="date" name="date" lay-verify="required" autocomplete="off"  class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">回访信息</label>
+        <div class="layui-input-block">
+            <input type="text" name="info" lay-verify="required" autocomplete="off" placeholder="请输入回访信息" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">客户</label>
+        <div class="layui-input-block">
+            <input type="text" name="client_id" lay-verify="required" autocomplete="off" placeholder="请输入客户id" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">检查</label>
+        <div class="layui-input-block">
+            <input type="text" name="main_id" lay-verify="required" autocomplete="off" placeholder="请输入检查内容" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">记录人</label>
+        <div class="layui-input-block">
+            <input type="text" name="user_id" lay-verify="required" autocomplete="off" placeholder="请输入记录人id" class="layui-input">
+        </div>
+    </div>
+    <div class="layui-form-item">
+        <label class="layui-form-label">评价</label>
+        <div class="layui-input-block">
+            <input type="text" name="comments" lay-verify="required" autocomplete="off" placeholder="请输入评价" class="layui-input">
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <button type="submit" class="layui-btn" lay-submit="" lay-filter="save">保存</button>
+
+        </div>
+    </div>
+</form>
+</div>
+<script >
+var id=getParam("id");
+
+var fm=new LayForm();
+fm.loaded=function(){
+    if(id){
+        ajax_get("get?id="+id,function(json){
+            fm.setval(json);
+        })
+    }
+}
+fm.onSubmit=function(field){
+    var url="insert";
+    if(id)url="update"
+    ajax_post(url,field,function(json){
+        if(json.status<0)openAlert(json.msg);
+        else{
+            closeLayer();
+            parent.fresh();
+        }
+    })
+}
+fm.init();
+
+</script>
+</body>
+</html>

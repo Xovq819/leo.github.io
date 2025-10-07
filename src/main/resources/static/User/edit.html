@@ -1,0 +1,190 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <title>Title</title>
+    <link href="/layui/css/layui.css" rel="stylesheet">
+    <script src="/layui/layui.js"></script>
+    <script src="/js/funs.js"></script>
+    <style>
+        .layui-form{
+        padding-right: 10px;
+        }
+        /* 添加/编辑弹窗表单的移动端适配 */
+        @media (max-width: 768px) {
+            /* 弹窗整体适配 */
+            .layui-layer {
+                width: 92% !important;
+                left: 4% !important;
+                margin-left: 0 !important;
+            }
+
+            /* 表单内边距调整 */
+            .layui-layer-content {
+                padding: 15px !important;
+            }
+
+            /* 表单布局优化 */
+            .layui-form-item {
+                margin-bottom: 12px;
+            }
+
+            .layui-form-label {
+                width: 70px !important;
+                padding: 9px 5px !important;
+                font-size: 14px;
+            }
+
+            .layui-input-block {
+                margin-left: 80px !important;
+            }
+
+            /* 输入框适配 */
+            .layui-input, .layui-select, .layui-textarea {
+                padding: 8px 10px !important;
+                font-size: 14px;
+            }
+
+            /* 按钮区域适配 */
+            .layui-layer-btn {
+                padding: 10px 15px 15px !important;
+                display: flex;
+                flex-direction: column;
+                gap: 8px;
+            }
+
+            .layui-layer-btn a {
+                width: 100% !important;
+                height: 40px !important;
+                line-height: 40px !important;
+                font-size: 15px !important;
+                margin: 0 !important;
+            }
+
+            /* 编辑页面特有适配 */
+            .edit-form {
+                padding: 10px;
+            }
+
+            .edit-form .layui-form-item {
+                flex-direction: column;
+                align-items: flex-start;
+            }
+
+            .edit-form .layui-form-label {
+                width: 100% !important;
+                margin-bottom: 5px;
+            }
+
+            .edit-form .layui-input-block {
+                margin-left: 0 !important;
+                width: 100% !important;
+            }
+        }
+
+        /* 超小屏设备额外优化 */
+        @media (max-width: 375px) {
+            .layui-form-label {
+                width: 60px !important;
+                font-size: 13px;
+            }
+
+            .layui-input-block {
+                margin-left: 70px !important;
+            }
+
+            .layui-layer-title {
+                font-size: 16px !important;
+                padding: 10px 15px !important;
+            }
+        }
+    </style>
+</head>
+<body>
+<div class="layui-form" lay-filter="myform">
+<form >
+    <input type="hidden" name="id" value="0">
+    <div class="layui-form-item">
+        <label class="layui-form-label">名称</label>
+        <div class="layui-input-block">
+            <input type="text" name="name" lay-verify="required" autocomplete="off" placeholder="请输入名称" class="layui-input">
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">部门</label>
+        <div class="layui-input-block">
+            <select name="department_id">
+                <option value="">--请选择部门--</option>
+                <option value="bm1">部门1</option>
+                <option value="bm2">部门2</option>
+            </select>
+
+
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">状态</label>
+        <div class="layui-input-block">
+            <select name="status">
+                <option value="">--请选择状态--</option>
+                <option value="bm2">在职</option>
+                <option value="bm2">离职</option>
+            </select>
+
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <label class="layui-form-label">权限</label>
+        <div class="layui-input-block">
+            <select name="power">
+                <option value="">--请选择权限--</option>
+                <option value="ky">管理员</option>
+                <option value="bky">操作员</option>
+                <!--<option value="wait">等待</option>-->
+            </select>
+
+        </div>
+    </div>
+
+    <div class="layui-form-item">
+        <div class="layui-input-block">
+            <button type="submit" class="layui-btn" lay-submit="" lay-filter="save">保存</button>
+
+        </div>
+    </div>
+</form>
+</div>
+<script >
+var id=getParam("id");
+
+var fm=new LayForm();
+fm.loaded=function(){
+    ajax_array(form,$("[name=status]"),"getArray?name=STATUSS");
+    ajax_array(form,$("[name=power]"),"getArray?name=POWERS");
+    ajax_list(form,$("[name=department_id]"),"/Department/getAll");
+    if(id){
+        ajax_array(form,$("[name=status]"),"getArray?name=STATUSS");
+        ajax_get("get?id="+id,function(json){
+            fm.setval(json);
+        })
+    }
+}
+fm.onSubmit=function(field){
+    var url="insert";
+    if(id)url="update"
+    ajax_post(url,field,function(json){
+        if(json.status<0)openAlert(json.msg);
+        else{
+            closeLayer();
+            parent.fresh();
+        }
+    })
+}
+fm.init();
+
+</script>
+</body>
+</html>
